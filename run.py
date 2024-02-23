@@ -46,8 +46,8 @@ for page_no in range(1,90):
     URL = f'https://ngodarpan.gov.in/index.php/home/statewise_ngo/8865/24/{page_no}?per_page=100'
     driver.get(URL)
     links = driver.find_elements(by=By.CSS_SELECTOR,value=clikable_links)
-    ngo_obj = {}
     for idx, link in enumerate(links):
+	ngo_obj = {}
         link.click()
         sleep(1)
         page_soup = BeautifulSoup(driver.page_source,'html.parser')
