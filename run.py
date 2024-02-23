@@ -46,7 +46,7 @@ for page_no in range(1,90):
     URL = f'https://ngodarpan.gov.in/index.php/home/statewise_ngo/8865/24/{page_no}?per_page=100'
     driver.get(URL)
     links = driver.find_elements(by=By.CSS_SELECTOR,value=clikable_links)
-    for idx, link in enumerate(links):
+    for link in links:
 	ngo_obj = {}
         link.click()
         sleep(1)
