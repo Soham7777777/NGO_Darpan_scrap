@@ -9,7 +9,7 @@ from pprint import pprint
 import json
 from time import sleep
 
-clikable_links = 'body > div:nth-child(21) > div.container > div.row > div > div > div.ibox-content > table > tbody > tr > td:nth-child(2) > a'
+clikable_links = 'body > div:nth-child(23) > div.container > div.row > div > div > div.ibox-content > table > tbody > tr > td:nth-child(2) > a'
 table_name = '#ngo_name_title'
 members_table = '#member_table'
 key_issue = '#printThis > div > div > table:nth-child(8) > tbody > tr:nth-child(1) > td:nth-child(2)'
@@ -43,22 +43,21 @@ driver = webdriver.Chrome()
 final_data = []
 
 for page_no in range(1,90):
-	URL = f'https://ngodarpan.gov.in/index.php/home/statewise_ngo/8865/24/{page_no}?per_page=100'
-	driver.get(URL)
-	links = driver.find_elements(by=By.CSS_SELECTOR,value=clikable_links)
-	ngo_obj = {}
-	for link in links:
-		link.click()
-		sleep(1)
-		page_soup = BeautifulSoup(driver.page_source,'html.parser')
-		ngo_obj['name'] = page_soup.select(table_name)[0].get_text(strip=True)
-		ngo_obj['key_issue'] = page_soup.select(key_issue)[0].get_text(strip=True)
-		ngo_obj['contacts'] = get_contacts(page_soup)
-		ngo_obj['members'] = get_members(page_soup)
-		final_data.append(ngo_obj)
-		sleep(1)	
-		webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
-		sleep(1)
-
-with open('./data.json','w') as f:
-	json.dump(final_data,f,indent=4)
+    URL = f'https://ngodarpan.gov.in/index.php/home/statewise_ngo/8865/24/{page_no}?per_page=100'
+    driver.get(URL)
+    links = driver.find_elements(by=By.CSS_SELECTOR,value=clikable_links)
+    ngo_obj = {}
+    for idx, link in enumerate(links):
+        link.click()
+        sleep(1)
+        page_soup = BeautifulSoup(driver.page_source,'html.parser')
+        ngo_obj['name'] = page_soup.select(table_name)[0].get_text(strip=True)
+        ngo_obj['key_issue'] = page_soup.select(key_issue)[0].get_text(strip=True)
+        ngo_obj['contacts'] = get_contacts(page_soup)
+        ngo_obj['members'] = get_members(page_soup)
+        final_data.append(ngo_obj)
+        sleep(1)	
+        webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+        sleep(1)
+        with open('./data.json','w') as f:
+            json.dump(final_data,f,indent=4)
