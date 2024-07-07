@@ -7,7 +7,15 @@ from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import json
 import os
+from pymongo import MongoClient
 
+
+client: MongoClient = MongoClient(input('Enter MongoDB Server URL:\n'))
+db_name: str = input('Enter Database Name:\n')
+collection_name: str = input('Enter Collection Name:\n')
+
+db = client[db_name]
+collection = db[collection_name]
 
 
 
@@ -81,7 +89,6 @@ if __name__ == "__main__":
     browser = webdriver.Chrome()
     skipped = []
     os.makedirs('./NGO_DATA')
-    i = 1 
     for page_no in range(1, 120+1):
         browser.get(URL.format(page=page_no))
         rows = browser.find_elements(By.CSS_SELECTOR, link_selector)
@@ -109,6 +116,7 @@ if __name__ == "__main__":
                 if html_data is not None:
                     json_data = convert_html_to_json(html_data)
                     webdriver.ActionChains(browser).send_keys(Keys.ESCAPE).perform()
-                    with open(f'./NGO_DATA/file{i}', 'w') as f:
-                        json.dump(json_data, f, indent=4)
-                    i += 1
+                    ngo_id = collection.insert_one(json_data).inserted_id
+                    print(f'{json_data['name']} inserted with id {ngo_id}')
+                else:
+                    print('Skipping')
