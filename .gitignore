@@ -1,6 +1,8 @@
 pyenv/
 instance/
 
+NGO_DATA/
+
 *.pyc
 __pycache__/
 
