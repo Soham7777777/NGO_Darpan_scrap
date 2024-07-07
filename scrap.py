@@ -6,7 +6,6 @@ from selenium.common.exceptions import TimeoutException, ElementNotInteractableE
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import json
-import sys
 import os
 
 
@@ -83,7 +82,7 @@ if __name__ == "__main__":
     skipped = []
     os.makedirs('./NGO_DATA')
     i = 1 
-    for page_no in range(1, 8+1):
+    for page_no in range(1, 120+1):
         browser.get(URL.format(page=page_no))
         rows = browser.find_elements(By.CSS_SELECTOR, link_selector)
 
@@ -107,8 +106,9 @@ if __name__ == "__main__":
                     isClickable = True
             else:
                 html_data = data_box.get_attribute('innerHTML')
-                json_data = convert_html_to_json(html_data)
-                webdriver.ActionChains(browser).send_keys(Keys.ESCAPE).perform()
-                with open(f'./NGO_DATA/file{i}', 'w') as f:
-                    json.dump(json_data, f, indent=4)
-                i += 1
+                if html_data is not None:
+                    json_data = convert_html_to_json(html_data)
+                    webdriver.ActionChains(browser).send_keys(Keys.ESCAPE).perform()
+                    with open(f'./NGO_DATA/file{i}', 'w') as f:
+                        json.dump(json_data, f, indent=4)
+                    i += 1
